@@ -1,2 +1,2 @@
-# latelier
+# L'atelier
 Computational Gastronomy project
