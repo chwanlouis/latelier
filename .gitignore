@@ -1,1 +1,25 @@
 neo4j/master_data/foodb_2020_4_7_csv.tar.gz
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+*.egg-info/
+dist/
+build/
+
+# Env files
+.env
+.env.local
+
+# SSL certificates
+mcp/certs/*.pem
+mcp/certs/*.key
+mcp/certs/*.crt
+
+# Node / React
+chatbot_ui/node_modules/
+chatbot_ui/dist/
+chatbot_ui/.env.local
