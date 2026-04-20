@@ -1,12 +1,15 @@
-import uuid
-
 from fastapi import APIRouter
 
 from app.graph.workflow import workflow
 from app.graph.state import GraphState
 from app.models.chat import ChatRequest, ChatResponse
-from app.services.session_service import append_message, get_history, new_session
-from langchain_core.messages import HumanMessage
+from app.services.session_service import (
+    append_message,
+    delete_session,
+    get_history,
+    new_session,
+)
+from langchain_core.messages import AIMessage, HumanMessage
 
 router = APIRouter(prefix="/chat", tags=["chat"])
 
@@ -29,7 +32,6 @@ async def chat(request: ChatRequest):
     ai_messages = [m for m in result["messages"] if m.type == "ai"]
     reply = ai_messages[-1].content if ai_messages else "I could not generate a response."
 
-    from langchain_core.messages import AIMessage
     append_message(session_id, AIMessage(content=reply))
 
     return ChatResponse(session_id=session_id, reply=reply)
@@ -37,6 +39,5 @@ async def chat(request: ChatRequest):
 
 @router.delete("/{session_id}")
 async def clear_session(session_id: str):
-    from app.services.session_service import _sessions
-    _sessions.pop(session_id, None)
+    delete_session(session_id)
     return {"message": "Session cleared"}

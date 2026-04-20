@@ -18,11 +18,17 @@ class Settings(BaseSettings):
     mcp_base_url: str = "https://localhost:8443"
     mcp_username: str = "admin"
     mcp_password: str = "admin123"
+    # Path to CA bundle / server cert for TLS verification.
+    # Set to "false" only in local development with self-signed certs.
+    mcp_ssl_verify: str = "true"
 
     # Neo4j (direct connection for graph lookups)
     neo4j_uri: str = "bolt://localhost:7687"
     neo4j_user: str = "neo4j"
     neo4j_password: str = "password"
+
+    # CORS — comma-separated list of allowed origins
+    cors_origins: str = "http://localhost:3000"
 
     class Config:
         env_file = ".env"

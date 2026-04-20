@@ -29,7 +29,7 @@ async def compute_pairing_score(
     total_data = await total_result.data()
     total = total_data[0]["total"] if total_data else 1
 
-    score = round(count / max(total, 1), 4)
+    score = round(count / total, 4)
     soap_risk = any(_has_aldehyde(m) for m in shared)
     return PairingScore(
         ingredient_a=ingredient_a,

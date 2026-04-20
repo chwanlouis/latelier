@@ -2,14 +2,19 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 
 from app.auth.jwt import create_access_token, hash_password, verify_password
+from app.config import get_settings
 from app.models.auth import Token
 
 router = APIRouter(prefix="/auth", tags=["auth"])
+settings = get_settings()
 
-# In-memory user store for demonstration — replace with DB lookup in production
-_FAKE_USERS_DB: dict[str, str] = {
-    "admin": hash_password("admin123"),
-}
+# In-memory user store for demonstration — replace with a real DB in production.
+# Populated at startup from environment variables; no hardcoded credentials.
+_FAKE_USERS_DB: dict[str, str] = {}
+
+if settings.debug:
+    # Only seed a default account in debug/development mode
+    _FAKE_USERS_DB["dev_admin"] = hash_password("dev_admin_only")
 
 
 @router.post("/token", response_model=Token)

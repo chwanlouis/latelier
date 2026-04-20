@@ -8,11 +8,22 @@ settings = get_settings()
 _token: str | None = None
 
 
+def _ssl_verify():
+    """Return the SSL verification setting for httpx.
+    Accepts a CA bundle path, 'true' (default verify), or 'false' (disable — dev only)."""
+    v = settings.mcp_ssl_verify.lower()
+    if v == "false":
+        return False
+    if v == "true":
+        return True
+    return v  # treat as a path to a CA bundle
+
+
 async def _get_token() -> str:
     global _token
     if _token:
         return _token
-    async with httpx.AsyncClient(verify=False) as client:
+    async with httpx.AsyncClient(verify=_ssl_verify()) as client:
         resp = await client.post(
             f"{settings.mcp_base_url}/api/v1/auth/token",
             data={"username": settings.mcp_username, "password": settings.mcp_password},
@@ -23,10 +34,11 @@ async def _get_token() -> str:
 
 
 async def _request(method: str, path: str, **kwargs):
+    global _token
     token = await _get_token()
     headers = kwargs.pop("headers", {})
     headers["Authorization"] = f"Bearer {token}"
-    async with httpx.AsyncClient(verify=False) as client:
+    async with httpx.AsyncClient(verify=_ssl_verify()) as client:
         resp = await client.request(
             method,
             f"{settings.mcp_base_url}{path}",
@@ -35,7 +47,6 @@ async def _request(method: str, path: str, **kwargs):
         )
         if resp.status_code == 401:
             # Token expired — reset and retry once
-            global _token
             _token = None
             token = await _get_token()
             headers["Authorization"] = f"Bearer {token}"

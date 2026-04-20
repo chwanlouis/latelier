@@ -76,7 +76,7 @@ export default function ChatWindow() {
               fontSize: "0.95rem",
             }}
           >
-            <p>Ask me about food pairings, molecular flavour profiles,</p>
+            <p>Ask me about food pairings, molecular flavor profiles,</p>
             <p>or OR6A2 genetic sensitivities.</p>
           </div>
         )}

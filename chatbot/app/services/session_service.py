@@ -1,6 +1,6 @@
 """In-memory session store for conversation history."""
 from typing import Dict, List
-from langchain_core.messages import BaseMessage, HumanMessage
+from langchain_core.messages import BaseMessage
 
 _sessions: Dict[str, List[BaseMessage]] = {}
 
@@ -13,6 +13,10 @@ def append_message(session_id: str, message: BaseMessage) -> None:
     if session_id not in _sessions:
         _sessions[session_id] = []
     _sessions[session_id].append(message)
+
+
+def delete_session(session_id: str) -> None:
+    _sessions.pop(session_id, None)
 
 
 def new_session() -> str:
