@@ -1,4 +1,9 @@
-python-dotenv
 fastapi[all]
 uvicorn[standard]
-sqlalchemy[asyncio]
+python-jose[cryptography]
+passlib[bcrypt]
+neo4j
+python-dotenv
+pydantic-settings
+httpx
+python-multipart
