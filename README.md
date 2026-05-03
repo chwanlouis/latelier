@@ -13,24 +13,59 @@ As a Restaurant Menu Developer, I want to access chemically validated food pairi
 
 ---
 
-## Technical Requirements / Tasks
+## Technical Architecture: Knowledge Graph Specification
+
+To ensure high-performance RAG and molecular similarity lookups, the system utilizes a single Neo4j graph with the following node and relationship specifications.
+
+### 1. Node Types & Properties
+
+| Domain | Label | Property | Type | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| **Culinary** | `:Recipe` | `id` | UUID | Primary Key |
+| | | `title` | String | Dish name |
+| | | `instructions` | Text | Raw preparation steps |
+| | | `embedding` | Vector(1536) | Semantic vector for RAG |
+| | `:Ingredient` | `name` | String | Resolved entity name (e.g., "Cilantro") |
+| | | `foodb_id` | Integer | FK to FooDB |
+| | | `raw_names` | Array | Aliases found in text (e.g., "Chinese Parsley") |
+| | `:Technique` | `name` | String | e.g., "Fermentation", "Sous-vide", "Smoking" |
+| | | `type` | String | Thermal, Chemical, or Mechanical |
+| | | `embedding` | Vector(1536) | Semantic vector for process similarity |
+| **Chemical** | `:Compound` | `cid` | String | Compound ID (FooDB/PubChem) |
+| | | `smiles` | String | SMILES notation for RDKit |
+| | | `fingerprint` | Vector(2048) | RDKit Morgan Fingerprint (Bit-vector) |
+| | `:FlavorProfile`| `descriptor` | String | Sensory tags (e.g., "Nutty", "Soapy") |
+| **Biological**| `:OdorReceptor` | `gene_symbol` | String | e.g., "OR6A2" |
+| | `:Perception` | `genotype` | String | e.g., "Carrier", "Non-Carrier" |
+
+### 2. Relationship Schema (Edges)
+
+*   `(:Recipe)-[:CONTAINS {quantity: float, unit: string}]->(:Ingredient)`
+*   `(:Recipe)-[:USES_TECHNIQUE]->(:Technique)`
+*   `(:Ingredient)-[:HAS_COMPOUND {concentration: float}]->(:Compound)`
+*   `(:Compound)-[:HAS_FLAVOR {intensity: int}]->(:FlavorProfile)`
+*   `(:Compound)-[:TRIGGERS]->(:OdorReceptor)`
+*   `(:OdorReceptor)-[:AFFECTS {valence: string}]->(:Perception)`
+*   `(:Ingredient)-[:MOLECULAR_MATCH {score: float}]->(:Ingredient)`
+
+---
+
+## Implementation Roadmap
 
 ### Data Acquisition & Knowledge Engineering
-* Integrate and clean datasets from **FooDB** and **FlavorDB**.
-* Ingest **SMILES** (Simplified Molecular Input Line Entry System) strings as the primary chemical notation format.
-* **Knowledge Graph Construction:** Ingest digitized recipe books to create a graph of ingredient relationships, techniques, and regional flavor profiles.
+* **Pipeline:** Integrate datasets from **FooDB** and **FlavorDB**.
+* **NER & Linking:** Extract ingredients from recipe books and map them to `foodb_id` via semantic similarity.
+* **Graph-RAG Pipeline:** Use Neo4j Vector Search on `:Recipe(embedding)` and `:Compound(fingerprint)` to provide hybrid retrieval.
 
-### Library & Architecture Implementation
-* Set up **RDKit** in a Python environment for cheminformatics processing.
-* Integrate the **M2OR** (Molecule to Odor Receptors) mapping library to simulate sensory perception.
-* **Graph-RAG Pipeline:** Implement a vector database (e.g., Weaviate or Pinecone) alongside a Graph Database (e.g., Neo4j) to retrieve recipe-based context for molecular pairings.
+### Library Implementation
+* **RDKit:** Calculate Tanimoto similarity between `:Compound` fingerprints to generate `:MOLECULAR_MATCH` edges.
+* **M2OR:** Map compounds to `:OdorReceptor` nodes to simulate sensory perception.
 
 ### Algorithm Development
-* Map molecules to specific odor receptors.
-* Build a **"Genetic Filter"** to identify ingredients containing aldehydes that trigger the OR6A2 receptor.
-* Develop a **Hybrid Scoring Algorithm** for pairing compatibility based on:
+* **The "Genetic Filter":** A Cypher query that traverses `(:Ingredient)-[:HAS_COMPOUND]->(c)-[:TRIGGERS]->(:OdorReceptor {gene_symbol: "OR6A2"})` to flag high-risk items.
+* **Hybrid Scoring:** 
     1. **Chemical Similarity:** Shared molecular profiles.
-    2. **Culinary Co-occurrence:** Frequency and success in the Recipe Knowledge Graph.
+    2. **Culinary Co-occurrence:** Graph-based frequency in existing recipes.
 
 ---
 
