@@ -93,7 +93,7 @@ def _extract_preferences(text: str) -> list[dict]:
         technique = _TECHNIQUE_KEYWORDS.get(word)
         if technique and i + 1 < len(words):
             ingredient = words[i + 1]
-            if ingredient not in _STOP_WORDS and len(ingredient) >= 3:
+            if ingredient not in _STOP_WORDS and len(ingredient) >= _MIN_INGREDIENT_LENGTH:
                 key = (technique, ingredient)
                 if key not in seen:
                     seen.add(key)
@@ -138,7 +138,7 @@ async def retrieve_context(state: GraphState) -> GraphState:
     # Retrieve recipe recommendations for each active preference
     if existing_prefs:
         recommendations: list[dict] = []
-        for pref in existing_prefs[:3]:  # limit to 3 preferences per call
+        for pref in existing_prefs[:_MAX_PREFERENCES_PER_CALL]:  # limit to avoid excess latency
             try:
                 rec = await mcp.recommendations_by_preference(
                     pref["technique"], pref["ingredient"]
@@ -169,3 +169,11 @@ _STOP_WORDS = {
     "pairs", "pairing", "food", "ingredient", "ingredients", "taste", "flavor",
     "like", "love", "prefer", "want", "enjoy",
 }
+
+# Minimum character length for a word to be considered an ingredient candidate.
+# Filters out short particles ("to", "it", "be") that are not ingredients.
+_MIN_INGREDIENT_LENGTH = 3
+
+# Maximum number of active preferences to query recipe recommendations for in
+# a single conversation turn.  Keeps latency bounded.
+_MAX_PREFERENCES_PER_CALL = 3

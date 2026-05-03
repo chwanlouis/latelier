@@ -46,7 +46,7 @@ TECHNIQUE_MAP: dict[str, tuple[str, list[str]]] = {
     "Broiling":   ("Thermal",    ["broil", "broiled", "broiling"]),
     "Smoking":    ("Thermal",    ["smok", "smoking", "smoked"]),
     "Fermenting": ("Chemical",   ["ferment", "fermenting", "fermented"]),
-    "Curing":     ("Chemical",   ["cur", "curing", "cured"]),
+    "Curing":     ("Chemical",   ["curing", "cured"]),
     "Pickling":   ("Chemical",   ["pickl", "pickling", "pickled"]),
     "Marinating": ("Chemical",   ["marinat", "marinating", "marinated"]),
     "Pounding":   ("Mechanical", ["pound", "pounding", "pounded"]),
@@ -76,6 +76,15 @@ class ParsedRecipe(NamedTuple):
 # ---------------------------------------------------------------------------
 # Parsing
 # ---------------------------------------------------------------------------
+
+# Maximum length of a title-continuation line (characters).  Lines within
+# this length that are all-caps are treated as a second heading line when a
+# recipe title wraps onto the next physical line due to OCR layout.
+_MAX_TITLE_CONTINUATION_LENGTH = 80
+
+# Maximum number of characters from the instructions sent to the embedding
+# model.  Keeps token usage reasonable while still capturing the full recipe.
+_MAX_EMBEDDING_TEXT_LENGTH = 2000
 
 # Matches a recipe heading: a number at the start of a line followed by an
 # em-dash (—) and the recipe title.  Some entries span two physical lines.
@@ -112,7 +121,7 @@ def parse_book(text: str) -> list[ParsedRecipe]:
         first_line = after_heading.split("\n")[0].strip() if after_heading else ""
         # If the line is all-caps (common for split titles) and short, treat
         # it as a continuation of the title
-        if first_line and re.fullmatch(r"[A-Z][A-Z\s',=\-\.()]+", first_line) and len(first_line) <= 80:
+        if first_line and re.fullmatch(r"[A-Z][A-Z\s',=\-\.()]+", first_line) and len(first_line) <= _MAX_TITLE_CONTINUATION_LENGTH:
             raw_title = f"{raw_title} {first_line}"
             # Skip that line in the instructions
             rest = "\n".join(after_heading.split("\n")[1:])
@@ -244,7 +253,7 @@ async def compute_embeddings(
     batch_size = 100  # OpenAI allows up to 2048 inputs per request
 
     all_numbers = [r.number for r in recipes]
-    all_texts = [f"{r.title}\n\n{r.instructions[:2000]}" for r in recipes]
+    all_texts = [f"{r.title}\n\n{r.instructions[:_MAX_EMBEDDING_TEXT_LENGTH]}" for r in recipes]
 
     for i in range(0, len(all_texts), batch_size):
         batch_texts = all_texts[i : i + batch_size]
