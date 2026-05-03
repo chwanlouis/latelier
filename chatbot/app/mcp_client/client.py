@@ -86,3 +86,20 @@ async def genetic_filter(ingredient: str) -> dict:
 
 async def get_molecules(skip: int = 0, limit: int = 20) -> list[dict]:
     return await _request("GET", "/api/v1/molecules/", params={"skip": skip, "limit": limit})
+
+
+async def get_recipes(skip: int = 0, limit: int = 20) -> list[dict]:
+    return await _request("GET", "/api/v1/recipes/", params={"skip": skip, "limit": limit})
+
+
+async def get_recipe(recipe_id: str) -> dict:
+    return await _request("GET", f"/api/v1/recipes/{recipe_id}")
+
+
+async def recommendations_by_preference(technique: str, ingredient: str, limit: int = 5) -> dict:
+    """Fetch recipe recommendations matching a technique+ingredient preference."""
+    return await _request(
+        "GET",
+        "/api/v1/recipes/recommendations/by-preference",
+        params={"technique": technique, "ingredient": ingredient, "limit": limit},
+    )

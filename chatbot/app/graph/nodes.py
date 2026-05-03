@@ -17,14 +17,105 @@ You help chefs and menu developers discover optimal food pairings based on share
 You are aware of the OR6A2 gene mutation (10-20% prevalence, predominantly East Asian populations)
 which causes certain aldehydes in cilantro to taste soapy.
 
-Use the provided context (ingredients, molecules, pairing scores) to give evidence-based recommendations.
-Always flag dishes that may be affected by OR6A2 when relevant."""
+Use the provided context (ingredients, molecules, pairing scores, recipe recommendations) to give
+evidence-based recommendations.  Always flag dishes that may be affected by OR6A2 when relevant.
+
+When a user expresses a cooking preference (e.g. "I like grilled steak" or "I prefer steamed fish"),
+acknowledge it and use the matching recipe suggestions from the knowledge base to guide your advice."""
+
+# ---------------------------------------------------------------------------
+# Preference extraction helpers
+# ---------------------------------------------------------------------------
+
+# Mapping of lowercase keyword → canonical Technique name
+_TECHNIQUE_KEYWORDS: dict[str, str] = {
+    "grill":    "Grilling",
+    "grilled":  "Grilling",
+    "grilling": "Grilling",
+    "steam":    "Steaming",
+    "steamed":  "Steaming",
+    "steaming": "Steaming",
+    "roast":    "Roasting",
+    "roasted":  "Roasting",
+    "roasting": "Roasting",
+    "fry":      "Frying",
+    "fried":    "Frying",
+    "frying":   "Frying",
+    "sauté":    "Frying",
+    "saute":    "Frying",
+    "bake":     "Baking",
+    "baked":    "Baking",
+    "baking":   "Baking",
+    "boil":     "Boiling",
+    "boiled":   "Boiling",
+    "boiling":  "Boiling",
+    "simmer":   "Simmering",
+    "simmered": "Simmering",
+    "simmering":"Simmering",
+    "poach":    "Poaching",
+    "poached":  "Poaching",
+    "poaching": "Poaching",
+    "braise":   "Braising",
+    "braised":  "Braising",
+    "braising": "Braising",
+    "smoke":    "Smoking",
+    "smoked":   "Smoking",
+    "smoking":  "Smoking",
+    "broil":    "Broiling",
+    "broiled":  "Broiling",
+    "broiling": "Broiling",
+    "ferment":  "Fermenting",
+    "fermented":"Fermenting",
+    "cure":     "Curing",
+    "cured":    "Curing",
+    "pickle":   "Pickling",
+    "pickled":  "Pickling",
+    "marinat":  "Marinating",
+    "marinated":"Marinating",
+}
+
+
+def _extract_preferences(text: str) -> list[dict]:
+    """Extract technique+ingredient preferences mentioned in *text*.
+
+    Looks for patterns like:
+      - "grilled steak"
+      - "steaming fish"
+      - "I like roasted chicken"
+      - "prefer boiled vegetables"
+    Returns a list of {technique, ingredient} dicts (de-duplicated).
+    """
+    preferences: list[dict] = []
+    seen: set[tuple[str, str]] = set()
+
+    words = re.findall(r"\b\w+\b", text.lower())
+    for i, word in enumerate(words):
+        technique = _TECHNIQUE_KEYWORDS.get(word)
+        if technique and i + 1 < len(words):
+            ingredient = words[i + 1]
+            if ingredient not in _STOP_WORDS and len(ingredient) >= 3:
+                key = (technique, ingredient)
+                if key not in seen:
+                    seen.add(key)
+                    preferences.append({"technique": technique, "ingredient": ingredient})
+    return preferences
 
 
 async def retrieve_context(state: GraphState) -> GraphState:
     """Fetch relevant data from the MCP server based on the latest user message."""
     last_user_msg = state["messages"][-1].content
     context: dict = {}
+
+    # Carry over existing preferences and extend with any new ones found
+    existing_prefs: list[dict] = list(state.get("preferences") or [])
+    new_prefs = _extract_preferences(last_user_msg)
+    # Merge without duplicates
+    seen = {(p["technique"], p["ingredient"]) for p in existing_prefs}
+    for p in new_prefs:
+        key = (p["technique"], p["ingredient"])
+        if key not in seen:
+            seen.add(key)
+            existing_prefs.append(p)
 
     # Extract ingredient names mentioned in message (naive extraction)
     words = re.findall(r"\b[A-Za-z]{3,}\b", last_user_msg)
@@ -44,7 +135,21 @@ async def retrieve_context(state: GraphState) -> GraphState:
         except Exception:
             pass
 
-    return {**state, "context": context}
+    # Retrieve recipe recommendations for each active preference
+    if existing_prefs:
+        recommendations: list[dict] = []
+        for pref in existing_prefs[:3]:  # limit to 3 preferences per call
+            try:
+                rec = await mcp.recommendations_by_preference(
+                    pref["technique"], pref["ingredient"]
+                )
+                recommendations.append(rec)
+            except Exception:
+                pass
+        if recommendations:
+            context["recipe_recommendations"] = recommendations
+
+    return {**state, "context": context, "preferences": existing_prefs}
 
 
 async def generate_response(state: GraphState) -> GraphState:
@@ -62,4 +167,5 @@ _STOP_WORDS = {
     "have", "has", "what", "which", "who", "where", "when", "how", "can",
     "you", "your", "our", "any", "all", "more", "does", "about", "pair",
     "pairs", "pairing", "food", "ingredient", "ingredients", "taste", "flavor",
+    "like", "love", "prefer", "want", "enjoy",
 }

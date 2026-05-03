@@ -9,3 +9,4 @@ class GraphState(TypedDict):
     messages: Annotated[Sequence[BaseMessage], operator.add]
     session_id: str
     context: dict  # additional data fetched from MCP / Neo4j
+    preferences: list[dict]  # list of {technique, ingredient} dicts captured from conversation

@@ -29,3 +29,26 @@ class GeneticFilterResult(BaseModel):
     ingredient: str
     has_or6a2_risk: bool
     aldehyde_molecules: list[str]
+
+
+class Technique(BaseModel):
+    name: str
+    type: str  # Thermal, Chemical, or Mechanical
+
+
+class Recipe(BaseModel):
+    id: str
+    title: str
+    instructions: str
+    techniques: Optional[list[Technique]] = None
+
+
+class DishPreference(BaseModel):
+    """A user preference for a specific technique+ingredient combination."""
+    technique: str   # e.g., "Grilling", "Steaming"
+    ingredient: str  # e.g., "steak", "fish"
+
+
+class PreferenceRecommendation(BaseModel):
+    preference: DishPreference
+    recipes: list[Recipe]
