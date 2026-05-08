@@ -9,7 +9,4 @@ services:
     environment:
       - OPENAI_API_KEY=${DEEPSEEK_API_KEY}
       - OPENAI_API_HOST=https://api.deepseek.com
-      - DEFAULT_MODEL=deepseek-v4-pro
-      - NEO4J_URI=${NEO4J_AURA_URI}
-      - NEO4J_USER=${NEO4J_AURA_USERNAME}
-      - NEO4J_PASSWORD=${NEO4J_AURA_PASSWORD}
+      - DEFAULT_MODEL=deepseek-chat
