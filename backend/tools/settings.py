@@ -1,0 +1,80 @@
+import os
+from typing import Optional
+from pydantic import Field
+from pydantic_settings import BaseSettings
+from pydantic import field_validator
+
+
+class Settings(BaseSettings):
+    ENV: str = Field("dev", env="ENV")
+    SECRET_KEY: str = Field("dev-secret-change-me", env="SECRET_KEY")
+    ALGORITHM: str = Field("HS256", env="ALGORITHM")
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = Field(60, env="ACCESS_TOKEN_EXPIRE_MINUTES")
+    REFRESH_TOKEN_EXPIRE_DAYS: int = Field(7, env="REFRESH_TOKEN_EXPIRE_DAYS")
+
+    BACKEND_ADMIN_USERNAME: str = Field("gma_opendoor_admin", env="BACKEND_ADMIN_USERNAME")
+    BACKEND_ADMIN_PASSWORD: str = Field("gma_opendoor_p@SSw0rD", env="BACKEND_ADMIN_PASSWORD")
+    BACKEND_PORT: int = Field(8000, env="BACKEND_PORT")
+
+    REDIS_URL: Optional[str] = Field(None, env="REDIS_URL")
+    REDIS_PASSWORD: Optional[str] = Field(None, env="REDIS_PASSWORD")
+    REDIS_HOST: str = Field("redis", env="REDIS_HOST")
+    REDIS_PORT: int = Field(6379, env="REDIS_PORT")
+    REDIS_DB: int = Field(0, env="REDIS_DB")
+
+    DATABASE_URL: Optional[str] = Field(None, env="DATABASE_URL")
+    POSTGRES_USER: str = Field("gma_user", env="POSTGRES_USER")
+    POSTGRES_PASSWORD: Optional[str] = Field("supersecretpg", env="POSTGRES_PASSWORD")
+    POSTGRES_DB: str = Field("gma_db", env="POSTGRES_DB")
+    POSTGRES_HOST: str = Field("gma_opendoor_postgres", env="POSTGRES_HOST")
+    POSTGRES_PORT: int = Field(5432, env="POSTGRES_PORT")
+
+    CLOUD_BASE_URL: str = Field("http://localhost:8070", env="CLOUD_BASE_URL")
+    TOKEN_TTL: int = Field(120, env="TOKEN_TTL")
+
+    model_config = {
+        "env_file": ".env",
+        "env_file_encoding": "utf-8",
+        "extra": "forbid",
+    }
+
+    @field_validator("REDIS_URL", mode="before")
+    @classmethod
+    def _build_redis_url(cls, v, info):
+        if v:
+            return v
+        data = info.data or {}
+        pwd = data.get("REDIS_PASSWORD") or os.getenv("REDIS_PASSWORD")
+        host = data.get("REDIS_HOST") or os.getenv("REDIS_HOST", "redis")
+        port = str(data.get("REDIS_PORT") or os.getenv("REDIS_PORT", 6379))
+        db = str(data.get("REDIS_DB") or os.getenv("REDIS_DB", 0))
+
+        if pwd:
+            return f"redis://:{pwd}@{host}:{port}/{db}"
+        return f"redis://{host}:{port}/{db}"
+
+    @field_validator("DATABASE_URL", mode="before")
+    @classmethod
+    def _build_database_url(cls, v, info):
+        if v:
+            return v
+        data = info.data or {}
+        user = data.get("POSTGRES_USER") or os.getenv("POSTGRES_USER", "gma_user")
+        pwd = data.get("POSTGRES_PASSWORD") or os.getenv("POSTGRES_PASSWORD", "supersecretpg")
+        db = data.get("POSTGRES_DB") or os.getenv("POSTGRES_DB", "gma_db")
+        host = data.get("POSTGRES_HOST") or os.getenv("POSTGRES_HOST", "gma_opendoor_postgres")
+        port = data.get("POSTGRES_PORT") or os.getenv("POSTGRES_PORT", 5432)
+        if pwd:
+            return f"postgresql+asyncpg://{user}:{pwd}@{host}:{port}/{db}"
+        return f"postgresql+asyncpg://{user}@{host}:{port}/{db}"
+
+    @field_validator("SECRET_KEY")
+    @classmethod
+    def _validate_secret_key(cls, v, info):
+        env = info.data.get("ENV") or os.getenv("ENV", "development")
+        if env == "production" and v in (None, "", "dev-secret-change-me"):
+            raise ValueError("SECRET_KEY must be set to a secure value in production")
+        return v
+
+
+settings = Settings()

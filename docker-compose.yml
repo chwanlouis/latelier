@@ -1,15 +1,39 @@
 version: '3.8'
 
 services:
-  chatbot-ui:
-    image: ghcr.io/mckaywrigley/chatbot-ui:legacy
-    container_name: chatbot-ui
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
     ports:
-      - "3000:3000"
+      - "${BACKEND_PORT}:${BACKEND_PORT}"
+    volumes:
+      - ./backend:/app
     environment:
-      - OPENAI_API_KEY=${DEEPSEEK_API_KEY}
-      - OPENAI_API_HOST=https://api.deepseek.com
-      - DEFAULT_MODEL=deepseek-v4-pro
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - NEO4J_URI=${NEO4J_AURA_URI}
       - NEO4J_USER=${NEO4J_AURA_USERNAME}
       - NEO4J_PASSWORD=${NEO4J_AURA_PASSWORD}
+    depends_on:
+      - postgres
+
+  postgres:
+    build:
+      context: ./psql
+      dockerfile: Dockerfile
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+
+volumes:
+  postgres_data:
+  neo4j_data:
+  neo4j_logs:
