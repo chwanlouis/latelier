@@ -1,8 +1,8 @@
 from typing import Optional, AsyncGenerator, Tuple
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
-from utils.log import logger
-from utils.settings import settings
+from tools.log import logger
+from tools.settings import settings
 
 
 class PSQLManager(object):

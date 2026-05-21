@@ -155,30 +155,6 @@
     </style>
 </head>
 <body>
-
-    <nav class="sidebar">
-        <div class="sidebar-header">
-            <h1>L'atelier<span>.</span></h1>
-        </div>
-        <ul class="sidebar-menu">
-            <li class="menu-item"><button data-page="index.html" onclick="selectMenu(this)">Introduction</button></li>
-            <li class="menu-item"><button class="active" data-page="recipe.html" onclick="selectMenu(this)">1. Recipes</button></li>
-            <li class="menu-item"><button onclick="selectMenu(this)">2. Food</button></li>
-            <li class="menu-item"><button onclick="selectMenu(this)">3. Compounds</button></li>
-            <li class="menu-item"><button onclick="selectMenu(this)">4. Enzymes</button></li>
-            <li class="menu-item"><button onclick="selectMenu(this)">5. Gene</button></li>
-            <li class="menu-item"><button onclick="selectMenu(this)">6. Flavor Fingerprint</button></li>
-            <li class="menu-item"><button onclick="selectMenu(this)">7. Recipe Fingerprint</button></li>
-            <li class="menu-item"><button onclick="selectMenu(this)">8. Molecular Overlap</button></li>
-            <li class="menu-item"><button onclick="selectMenu(this)">9. Flavor Bridges</button></li>
-            <li class="menu-item"><button onclick="selectMenu(this)">10. Cross-Modal Compensation</button></li>
-            <li class="menu-item"><button onclick="selectMenu(this)">11. Recipe Generation</button></li>
-        </ul>
-        <div class="sidebar-footer">
-            © 2026 L'atelier Project
-        </div>
-    </nav>
-
     <div class="recipe-container">
         <!-- 頂部頁首與自動補全搜尋欄 -->
         <header class="recipe-header">
@@ -343,6 +319,35 @@
             autocompleteList.innerHTML = "";
             autocompleteList.style.display = "none";
             currentFocus = -1;
+        }
+
+        function selectMenu(element) {
+            // Remove 'active' class from all buttons
+            document.querySelectorAll('.menu-item button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Add 'active' class to the clicked button
+            element.classList.add('active');
+
+            // Get the page URL from the 'data-page' attribute
+            const page = element.getAttribute('data-page');
+
+            // Fetch and load the content into the main content area
+            fetch(page)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Page not found');
+                    }
+                    return response.text();
+                })
+                .then(html => {
+                    document.querySelector('.content-wrapper').innerHTML = html;
+                })
+                .catch(error => {
+                    console.error(error);
+                    document.querySelector('.content-wrapper').innerHTML = '<p>Error loading page.</p>';
+                });
         }
 
         document.addEventListener("click", function(e) {

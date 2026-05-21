@@ -3,13 +3,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from typing import Optional
 from model.sql.user import UsersSQLModel, UserLevelEnum
-from model.sql.user_role import UserRoleSQLModel
-from model.sql.role import RolesSQLModel
-from model.sql.role_permission import RolePermissionSQLModel
-from model.sql.permission import PermissionSQLModel
-from utils.psqltools import db_session_manager
+from tools.psqltools import db_session_manager
 from repository.base import RepositoryBaseClass
-from utils.log import logger
+from tools.log import logger
 
 
 class UserRepository(RepositoryBaseClass):

@@ -2,8 +2,8 @@ from sqlalchemy import text, update, inspect
 from sqlalchemy.exc import SQLAlchemyError, NoSuchTableError
 from sqlalchemy.ext.asyncio import AsyncSession, AsyncConnection
 from typing import List, TypeVar, Any, Optional
-from utils.psqltools import db_session_manager
-from utils.log import logger
+from tools.psqltools import db_session_manager
+from tools.log import logger
 
 
 T = TypeVar('T')

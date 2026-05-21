@@ -1,6 +1,6 @@
 import redis.asyncio as redis
-from utils.log import logger
-from utils.settings import settings
+from tools.log import logger
+from tools.settings import settings
 
 
 class AsyncRedisManager:

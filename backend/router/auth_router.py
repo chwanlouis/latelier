@@ -7,16 +7,16 @@ from fastapi import APIRouter, Depends, HTTPException, Request, Security, status
 from fastapi.security import (
     OAuth2PasswordRequestForm, OAuth2PasswordBearer, HTTPAuthorizationCredentials, HTTPBearer
 )
-from utils.settings import settings
-from utils.login import (
+from tools.settings import settings
+from tools.login import (
     hash_password,
     verify_password,
     decode_token,
     create_access_token,
     create_refresh_token,
 )
-from utils.redistools import async_redis_manager
-from utils.log import logger
+from tools.redistools import async_redis_manager
+from tools.log import logger
 from model.request.auth import RegisterRequestModel
 from model.response.auth import UserResponseModel, TokenResponseModel
 from model.sql.user import UsersSQLModel, UserLevelEnum

@@ -7,10 +7,10 @@ from starlette.middleware.base import BaseHTTPMiddleware
 
 LOG_DIR = "logs"
 os.makedirs(LOG_DIR, exist_ok=True)
-LOG_FILE = os.path.join(LOG_DIR, "gma_opendoor_backend.log")
+LOG_FILE = os.path.join(LOG_DIR, "latelier_backend.log")
 
 
-logger = logging.getLogger("gma_opendoor")
+logger = logging.getLogger("latelier")
 logger.setLevel(logging.INFO)
 
 

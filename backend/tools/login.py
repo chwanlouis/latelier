@@ -4,8 +4,8 @@ from typing import Optional
 from fastapi import Depends, HTTPException, status
 from passlib.hash import argon2
 from passlib.context import CryptContext
-from utils.settings import settings
-from utils.log import logger
+from tools.settings import settings
+from tools.log import logger
 
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
