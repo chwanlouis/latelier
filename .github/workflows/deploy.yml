@@ -76,22 +76,18 @@ jobs:
         set -e
         TARGET_DIR="/home/ec2-user/latelier"
         mkdir -p "$TARGET_DIR"
-
-        # 1. 解壓代碼更新到目標目錄
+        
         tar -xzf /home/ec2-user/deploy.tar.gz -C "$TARGET_DIR"
         rm -f /home/ec2-user/deploy.tar.gz
-
-        # 2. 💡 修正：必須先切換到有 docker-compose.yml 的目錄
+        
         cd "$TARGET_DIR"
-
+        
         echo "Launching production microservices via Docker Compose..."
-
-        # 3. 確保在正確目錄下關閉舊容器並清理孤兒容器
-        sudo docker compose down --remove-orphans || true
-
-        # 4. 重新編譯並啟動
-        sudo docker compose up -d --build
-
+        
+        # 使用帶有連字號的獨立指令，這在任何 Linux 版本上都 100% 支援參數
+        sudo docker-compose down --remove-orphans || true
+        sudo docker-compose up -d --build
+        
         echo "Deployment completed successfully!"
         EOF
     
