@@ -52,18 +52,22 @@ jobs:
     # Step 2: Ensure Docker Compose Plugin is Installed
     - name: Setup Docker Compose Plugin on EC2
       run: |
-        ssh ec2-user@13.239.19.185 << 'EOF'
-        set -e
-        if ! docker compose version &> /dev/null; then
-            echo "Installing Docker Compose binary plugin..."
-            sudo mkdir -p /usr/libexec/docker/cli-plugins/
-            sudo curl -SL "https://github.com(uname -m)" -o /usr/libexec/docker/cli-plugins/docker-compose
-            sudo chmod +x /usr/libexec/docker/cli-plugins/docker-compose
-            echo "Docker Compose installed successfully."
-        else
-            echo "Docker Compose is already installed."
-        fi
-        EOF
+          ssh ec2-user@13.239.19.185 << 'EOF'
+          set -e
+          if ! docker compose version &> /dev/null; then
+              echo "Installing Docker Compose binary plugin..."
+              sudo mkdir -p /usr/libexec/docker/cli-plugins/
+          
+              ARCH=$(uname -m)
+              URL='https://github.com{ARCH}
+          
+              sudo curl -SL "$URL" -o /usr/libexec/docker/cli-plugins/docker-compose
+              sudo chmod +x /usr/libexec/docker/cli-plugins/docker-compose
+              echo "Docker Compose installed successfully."
+          else
+              echo "Docker Compose is already installed."
+          fi
+          EOF
 
     # Step 3: Extract Package and Launch Application
     - name: Extract Package and Start Containers
