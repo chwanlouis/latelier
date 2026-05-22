@@ -59,9 +59,8 @@ jobs:
               sudo mkdir -p /usr/libexec/docker/cli-plugins/
           
               ARCH=$(uname -m)
-              URL='https://github.com{ARCH}
+              sudo curl -SL "https://github.com" -o /usr/libexec/docker/cli-plugins/docker-compose
           
-              sudo curl -SL "$URL" -o /usr/libexec/docker/cli-plugins/docker-compose
               sudo chmod +x /usr/libexec/docker/cli-plugins/docker-compose
               echo "Docker Compose installed successfully."
           else
