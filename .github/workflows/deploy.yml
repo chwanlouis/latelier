@@ -28,7 +28,7 @@ jobs:
       run: |
         tar -czf /tmp/deploy.tar.gz --exclude='.git' --exclude='.github' .
 
-    # 2. 使用 scp 將 /tmp 中的壓縮檔傳送到 EC2 的家目錄
+    # 2. 使用 scp 將壓縮檔傳送到 EC2 的家目錄
     - name: Copy package to EC2
       run: |
         scp -i ~/.ssh/id_rsa /tmp/deploy.tar.gz ec2-user@13.239.19.185:/home/ec2-user/
@@ -37,7 +37,7 @@ jobs:
     - name: Deploy and Start Containers
       run: |
         ssh -i ~/.ssh/id_rsa ec2-user@13.239.19.185 << 'EOF'
-        # A. 確保安裝了 Docker 引擎
+        # A. 確保基礎 Docker 引擎已安裝
         if ! command -v docker &> /dev/null; then
             echo "未偵測到 Docker，正在進行安裝..."
             sudo dnf install -y docker
@@ -45,10 +45,15 @@ jobs:
             sudo systemctl enable docker
         fi
 
-        # B. 💡 使用 Amazon Linux 2023 的 dnf 安裝官方 Docker Compose 外掛程式
+        # B. 修正：手動下載 Docker Compose 並放置在官方全域外掛程式目錄
         if ! docker compose version &> /dev/null; then
-            echo "未偵測到 Docker Compose，正在透過 dnf 安裝官方套件..."
-            sudo dnf install -y docker-compose-plugin
+            echo "未偵測到 Docker Compose，正在手動配置全域外掛程式..."
+            # 建立全域 Docker CLI 外掛程式目錄
+            sudo mkdir -p /usr/libexec/docker/cli-plugins/
+            # 下載 Docker 官方最新穩定版（自動判斷系統架構如 x86_64 或 aarch64）
+            sudo curl -SL "https://github.com/docker/compose/releases/latest/download/docker-compose-linux-$(uname -m)" -o /usr/libexec/docker/cli-plugins/docker-compose
+            # 賦予全域可執行權限
+            sudo chmod +x /usr/libexec/docker/cli-plugins/docker-compose
         fi
 
         # C. 定義專案目標目錄
@@ -63,7 +68,7 @@ jobs:
         cd "$TARGET_DIR"
         
         echo "正在啟動 Docker 容器..."
-        # 使用 sudo 確保 100% 擁有執行權限
+        # 💡 使用 sudo 強制執行，且全域外掛能確保 sudo docker compose 完美運行
         sudo docker compose up -d --build
 
         echo "部署成功！"
