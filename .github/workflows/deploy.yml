@@ -85,8 +85,8 @@ jobs:
         echo "Launching production microservices via Docker Compose..."
         
         # 使用帶有連字號的獨立指令，這在任何 Linux 版本上都 100% 支援參數
-        sudo docker compose down || true
-        sudo docker compose up -d --build
+        docker compose down || true
+        docker compose up -d --build
         
         echo "Deployment completed successfully!"
         EOF
