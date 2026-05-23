@@ -24,3 +24,6 @@ mcp/certs/*.crt
 chatbot_ui/node_modules/
 chatbot_ui/dist/
 chatbot_ui/.env.local
+
+# log
+backend/logs
