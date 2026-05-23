@@ -9,15 +9,15 @@ services:
       - ./backend:/app
     environment:
       - ENV=${ENV:-dev}
-      - SECRET_KEY=${SECRET_KEY:-dev-secret-change-me}
+      - SECRET_KEY=${SECRET_KEY:?SECRET_KEY is required}
       - ALGORITHM=${ALGORITHM:-HS256}
       - ACCESS_TOKEN_EXPIRE_MINUTES=${ACCESS_TOKEN_EXPIRE_MINUTES:-60}
       - REFRESH_TOKEN_EXPIRE_DAYS=${REFRESH_TOKEN_EXPIRE_DAYS:-7}
       - BACKEND_ADMIN_USERNAME=${BACKEND_ADMIN_USERNAME:-gma_opendoor_admin}
-      - BACKEND_ADMIN_PASSWORD=${BACKEND_ADMIN_PASSWORD:-gma_opendoor_p@SSw0rD}
+      - BACKEND_ADMIN_PASSWORD=${BACKEND_ADMIN_PASSWORD:?BACKEND_ADMIN_PASSWORD is required}
       - POSTGRES_DB=${POSTGRES_DB:-gma_db}
       - POSTGRES_USER=${POSTGRES_USER:-gma_user}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-supersecretpg}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
       - POSTGRES_HOST=postgres
       - POSTGRES_PORT=5432
       - REDIS_HOST=redis
@@ -36,7 +36,7 @@ services:
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-gma_db}
       POSTGRES_USER: ${POSTGRES_USER:-gma_user}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-supersecretpg}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
