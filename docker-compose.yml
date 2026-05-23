@@ -14,21 +14,36 @@ services:
       - NEO4J_URI=${NEO4J_AURA_URI}
       - NEO4J_USER=${NEO4J_AURA_USERNAME}
       - NEO4J_PASSWORD=${NEO4J_AURA_PASSWORD}
-#    depends_on:
-#      - postgres
+      - BACKEND_PORT=${BACKEND_PORT}
+    depends_on:
+      - postgres
 
-#  postgres:
-#    build:
-#      context: ./psql
-#      dockerfile: Dockerfile
-#    ports:
-#      - "5432:5432"
-#    environment:
-#      POSTGRES_DB: ${POSTGRES_DB}
-#      POSTGRES_USER: ${POSTGRES_USER}
-#      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-#    volumes:
-#      - postgres_data:/var/lib/postgresql/data
+  postgres:
+    build:
+      context: ./psql
+      dockerfile: Dockerfile
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "${FRONTEND_PORT}:${FRONTEND_PORT}"
+    environment:
+      - FRONTEND_PORT=${FRONTEND_PORT}
+    volumes:
+      - ./frontend:/app
+    depends_on:
+      - backend
+      - postgres
 
 
 volumes:

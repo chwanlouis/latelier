@@ -15,6 +15,7 @@ class Settings(BaseSettings):
     BACKEND_ADMIN_USERNAME: str = Field("gma_opendoor_admin", env="BACKEND_ADMIN_USERNAME")
     BACKEND_ADMIN_PASSWORD: str = Field("gma_opendoor_p@SSw0rD", env="BACKEND_ADMIN_PASSWORD")
     BACKEND_PORT: int = Field(8000, env="BACKEND_PORT")
+    FRONTEND_PORT: int = Field(3000, env="FRONTEND_PORT")
 
     REDIS_URL: Optional[str] = Field(None, env="REDIS_URL")
     REDIS_PASSWORD: Optional[str] = Field(None, env="REDIS_PASSWORD")

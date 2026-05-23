@@ -14,7 +14,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Expose the backend port
-EXPOSE 80
+EXPOSE ${BACKEND_PORT:-8000}
 
 # Set the default command to run the application
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80", "--reload"]
+CMD ["sh", "-c", "uvicorn main:app --host 0.0.0.0 --port ${BACKEND_PORT:-8000} --reload"]
