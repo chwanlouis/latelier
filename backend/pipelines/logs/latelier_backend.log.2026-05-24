@@ -1,0 +1,7 @@
+2026-05-24 18:46:44,037 - INFO - latelier - Initiating Food entity node injection sequence from: ..\data\foodb\foodb_2020_04_07_json\food.json
+2026-05-24 18:46:44,038 - ERROR - latelier - Critical system failure during Food data ingestion loop: parse error: trailing garbage
+          rue,"public_id":"FOOD00001"} {"id":2,"name":"Savoy cabbage",
+                     (right here) ------^
+
+2026-05-24 18:47:36,659 - INFO - latelier - Initiating Food entity node injection sequence from NDJSON: ..\data\foodb\foodb_2020_04_07_json\food.json
+2026-05-24 18:47:36,682 - ERROR - latelier - Critical system failure during Food data ingestion loop: 'TransactionProxy' object does not support the asynchronous context manager protocol

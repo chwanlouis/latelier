@@ -27,3 +27,6 @@ chatbot_ui/.env.local
 
 # log
 backend/logs
+
+# data
+backend/data/foodb

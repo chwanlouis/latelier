@@ -11,9 +11,6 @@ class Settings(BaseSettings):
     ALGORITHM: str = Field("HS256", env="ALGORITHM")
     ACCESS_TOKEN_EXPIRE_MINUTES: int = Field(60, env="ACCESS_TOKEN_EXPIRE_MINUTES")
     REFRESH_TOKEN_EXPIRE_DAYS: int = Field(7, env="REFRESH_TOKEN_EXPIRE_DAYS")
-
-    BACKEND_ADMIN_USERNAME: str = Field("gma_opendoor_admin", env="BACKEND_ADMIN_USERNAME")
-    BACKEND_ADMIN_PASSWORD: str = Field("gma_opendoor_p@SSw0rD", env="BACKEND_ADMIN_PASSWORD")
     BACKEND_PORT: int = Field(8000, env="BACKEND_PORT")
     FRONTEND_PORT: int = Field(3000, env="FRONTEND_PORT")
 
@@ -29,6 +26,11 @@ class Settings(BaseSettings):
     POSTGRES_DB: str = Field("gma_db", env="POSTGRES_DB")
     POSTGRES_HOST: str = Field("gma_opendoor_postgres", env="POSTGRES_HOST")
     POSTGRES_PORT: int = Field(5432, env="POSTGRES_PORT")
+
+    # NEO4J_URI: str = Field("neo4j://localhost:7687", env="NEO4J_URI")
+    NEO4J_URI: str = Field("bolt://neo4j:RielaLatelier1002@localhost:7687", env="NEO4J_URI")
+    NEO4J_USERNAME: str = Field("neo4j", env="NEO4J_USERNAME")
+    NEO4J_PASSWORD: str = Field("password_here", env="NEO4J_PASSWORD")
 
     CLOUD_BASE_URL: str = Field("http://localhost:8070", env="CLOUD_BASE_URL")
     TOKEN_TTL: int = Field(120, env="TOKEN_TTL")

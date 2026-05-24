@@ -11,12 +11,13 @@ services:
       - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - NEO4J_URI=${NEO4J_AURA_URI}
-      - NEO4J_USER=${NEO4J_AURA_USERNAME}
-      - NEO4J_PASSWORD=${NEO4J_AURA_PASSWORD}
+      - NEO4J_URI=${NEO4J_URI}
+      - NEO4J_USERNAME=${NEO4J_USERNAME}
+      - NEO4J_PASSWORD=${NEO4J_PASSWORD}
       - BACKEND_PORT=${BACKEND_PORT}
     depends_on:
       - postgres
+      - graphdb
 
   postgres:
     build:
@@ -30,6 +31,25 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data
+
+  graphdb:
+    build: ./neo4j
+    container_name: foodb-neo4j-local
+    restart: unless-stopped
+    ports:
+      - "7474:7474"   # Access Web UI via http://localhost:7474
+      - "7687:7687"   # Database port connection string target for Python
+    environment:
+      - NEO4J_AUTH=${NEO4J_USERNAME}/${NEO4J_PASSWORD}
+    volumes:
+      - neo4j_data:/data
+      - neo4j_logs:/logs
+      - ./neo4j/import:/var/lib/neo4j/import
+    healthcheck:
+      test: [ "CMD-SHELL", "wget --no-verbose --tries=1 --spider localhost:7474 || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   frontend:
     build:

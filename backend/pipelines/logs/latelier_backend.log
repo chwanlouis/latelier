@@ -1,0 +1,39 @@
+2026-05-25 00:12:54,377 - INFO - latelier - Initiating Food entity node injection sequence from NDJSON: ..\data\foodb\foodb_2020_04_07_json\food.json
+2026-05-25 00:12:54,539 - ERROR - latelier - Critical system failure during Food data ingestion loop: {neo4j_code: Neo.ClientError.Security.Unauthorized} {message: The client is unauthorized due to authentication failure.} {gql_status: 42NFF} {gql_status_description: error: syntax error or access rule violation - permission/access denied. Access denied, see the security logs for details.}
+2026-05-25 00:16:38,791 - INFO - latelier - Initiating Food entity node injection sequence from NDJSON: ..\data\foodb\foodb_2020_04_07_json\food.json
+2026-05-25 00:16:38,896 - ERROR - latelier - Critical system failure during Food data ingestion loop: {neo4j_code: Neo.ClientError.Security.Unauthorized} {message: The client is unauthorized due to authentication failure.} {gql_status: 42NFF} {gql_status_description: error: syntax error or access rule violation - permission/access denied. Access denied, see the security logs for details.}
+2026-05-25 00:17:39,371 - INFO - latelier - Initiating Food entity node injection sequence from NDJSON: ..\data\foodb\foodb_2020_04_07_json\food.json
+2026-05-25 00:17:39,460 - ERROR - latelier - Critical system failure during Food data ingestion loop: {neo4j_code: Neo.ClientError.Security.Unauthorized} {message: The client is unauthorized due to authentication failure.} {gql_status: 42NFF} {gql_status_description: error: syntax error or access rule violation - permission/access denied. Access denied, see the security logs for details.}
+2026-05-25 01:11:56,811 - INFO - latelier - Neomodel OGM engine initialized successfully.
+2026-05-25 01:11:56,820 - INFO - latelier - Initiating Food entity node injection sequence from NDJSON: ..\data\foodb\foodb_2020_04_07_json\food.json
+2026-05-25 01:12:05,737 - ERROR - latelier - Transaction rollback triggered during Food.bulk_upsert execution: module 'model.neo4j.food' has no attribute 'Compound'
+2026-05-25 01:12:05,790 - ERROR - latelier - Critical system failure during Food data ingestion loop: module 'model.neo4j.food' has no attribute 'Compound'
+2026-05-25 01:17:22,413 - INFO - latelier - Neomodel OGM engine initialized successfully.
+2026-05-25 01:17:22,424 - INFO - latelier - Initiating Food entity node injection sequence from NDJSON: ..\data\foodb\foodb_2020_04_07_json\food.json
+2026-05-25 01:17:27,361 - ERROR - latelier - Transaction rollback triggered during Food.bulk_upsert execution: module 'model.neo4j.food' has no attribute 'Compound'
+2026-05-25 01:17:27,381 - ERROR - latelier - Critical system failure during Food data ingestion loop: module 'model.neo4j.food' has no attribute 'Compound'
+2026-05-25 01:26:43,726 - INFO - latelier - Neomodel OGM engine initialized successfully.
+2026-05-25 01:26:43,731 - INFO - latelier - Initiating Food entity node injection sequence from NDJSON: ..\data\foodb\foodb_2020_04_07_json\food.json
+2026-05-25 01:26:48,207 - ERROR - latelier - Transaction rollback triggered during Food.bulk_upsert execution: Relationship of type HAS_NUTRIENT redefined as <class 'model.neo4j.nutrient.ContentRel'>.
+CONTAINS_COMPOUND --> <class 'model.neo4j.food.ContentRel'>
+HAS_NUTRIENT --> <class 'model.neo4j.food.ContentRel'>
+Food --> <class 'model.neo4j.food.Food'>
+Compound --> <class 'model.neo4j.compound.Compound'>
+
+2026-05-25 01:26:48,225 - ERROR - latelier - Critical system failure during Food data ingestion loop: Relationship of type HAS_NUTRIENT redefined as <class 'model.neo4j.nutrient.ContentRel'>.
+CONTAINS_COMPOUND --> <class 'model.neo4j.food.ContentRel'>
+HAS_NUTRIENT --> <class 'model.neo4j.food.ContentRel'>
+Food --> <class 'model.neo4j.food.Food'>
+Compound --> <class 'model.neo4j.compound.Compound'>
+
+2026-05-25 01:32:44,774 - INFO - latelier - Neomodel OGM engine initialized successfully.
+2026-05-25 01:32:44,800 - INFO - latelier - Initiating Food entity node injection sequence from NDJSON: ..\data\foodb\foodb_2020_04_07_json\food.json
+2026-05-25 01:32:52,798 - ERROR - latelier - Transaction rollback triggered during Food.bulk_upsert execution: model must be a StructuredRel
+2026-05-25 01:32:52,808 - ERROR - latelier - Critical system failure during Food data ingestion loop: model must be a StructuredRel
+2026-05-25 01:37:52,535 - INFO - latelier - Neomodel OGM engine initialized successfully.
+2026-05-25 01:37:52,541 - INFO - latelier - Initiating Food entity node injection sequence from NDJSON: ..\data\foodb\foodb_2020_04_07_json\food.json
+2026-05-25 01:37:56,578 - ERROR - latelier - Transaction rollback triggered during Food.bulk_upsert execution: model must be a StructuredRel
+2026-05-25 01:37:56,589 - ERROR - latelier - Critical system failure during Food data ingestion loop: model must be a StructuredRel
+2026-05-25 01:38:31,710 - INFO - latelier - Neomodel OGM engine initialized successfully.
+2026-05-25 01:38:31,728 - INFO - latelier - Initiating Food entity node injection sequence from NDJSON: ..\data\foodb\foodb_2020_04_07_json\food.json
+2026-05-25 01:38:39,793 - INFO - latelier - Ingestion lifecycle successful. Total Food nodes safely stored: 992
