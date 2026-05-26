@@ -5,7 +5,8 @@ from neomodel import (
     FloatProperty,
     AsyncRelationshipFrom
 )
-from model.neo4j.relations import FoodCompoundRel
+from neomodel import AsyncRelationshipTo
+from model.neo4j.relations import FoodCompoundRel, FlavorCompoundRel
 
 
 class Compound(AsyncStructuredNode):
@@ -30,4 +31,10 @@ class Compound(AsyncStructuredNode):
         "model.neo4j.food.Food",
         "CONTAINS_COMPOUND",
         model=FoodCompoundRel
+    )
+
+    flavors = AsyncRelationshipTo(
+        "model.neo4j.flavor.Flavor",
+        "HAS_FLAVOR",
+        model=FlavorCompoundRel
     )

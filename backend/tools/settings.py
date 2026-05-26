@@ -27,8 +27,8 @@ class Settings(BaseSettings):
     POSTGRES_HOST: str = Field("gma_opendoor_postgres", env="POSTGRES_HOST")
     POSTGRES_PORT: int = Field(5432, env="POSTGRES_PORT")
 
-    # NEO4J_URI: str = Field("neo4j://localhost:7687", env="NEO4J_URI")
-    NEO4J_URI: str = Field("bolt://neo4j:RielaLatelier1002@localhost:7687", env="NEO4J_URI")
+    NEO4J_URL: Optional[str] = Field(None, env="NEO4J_URL")
+    NEO4J_URI: str = Field("bolt://graphdb:7687", env="NEO4J_URI")
     NEO4J_USERNAME: str = Field("neo4j", env="NEO4J_USERNAME")
     NEO4J_PASSWORD: str = Field("password_here", env="NEO4J_PASSWORD")
 
@@ -70,6 +70,31 @@ class Settings(BaseSettings):
         if pwd:
             return f"postgresql+asyncpg://{user}:{pwd}@{host}:{port}/{db}"
         return f"postgresql+asyncpg://{user}@{host}:{port}/{db}"
+
+    @field_validator("NEO4J_URL", mode="before")
+    @classmethod
+    def _build_neo4j_url(cls, v, info):
+        """
+        Dynamically compiles standalone configuration variables into the integrated
+        authenticated URI format required by neomodel's connection parser.
+        """
+        if v:
+            return v
+        data = info.data or {}
+
+        # Pull parameters safely matching current pre-validation dictionary mappings
+        uri = data.get("NEO4J_URI") or os.getenv("NEO4J_URI", "bolt://graphdb:7687")
+        user = data.get("NEO4J_USERNAME") or os.getenv("NEO4J_USERNAME", "neo4j")
+        pwd = data.get("NEO4J_PASSWORD") or os.getenv("NEO4J_PASSWORD", "password_here")
+
+        # Isolate the schema protocol (bolt:// or neo4j://) from the destination address host string
+        if "://" in uri:
+            scheme, address = uri.split("://", 1)
+        else:
+            scheme, address = "bolt", uri
+
+        # Produces the exact structure expected by neomodel: bolt://user:password@host:port
+        return f"{scheme}://{user}:{pwd}@{address}"
 
     @field_validator("SECRET_KEY")
     @classmethod

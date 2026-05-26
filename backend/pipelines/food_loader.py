@@ -14,7 +14,7 @@ def parse_iso_date(date_str: str) -> datetime:
         return None
 
 
-async def ingest_food_json_file(file_path: str, batch_size: int = 1000):
+async def bulk_ingest_foods(file_path: str, batch_size: int = 1000):
     logger.info(f"Initiating Food entity node injection sequence from NDJSON: {file_path}")
     batch_buffer = []
     total_nodes_created = 0

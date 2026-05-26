@@ -3,7 +3,6 @@ from neomodel import (
     StringProperty,
     DateTimeProperty,
     ArrayProperty,
-    AsyncStructuredRel,
     AsyncRelationshipTo
 )
 from model.neo4j.relations import FoodNutrientRel, FoodCompoundRel
@@ -18,7 +17,6 @@ class Food(AsyncStructuredNode):
     food_group = StringProperty(index=True)
     food_subgroup = StringProperty()
 
-    # FIX: Swapped simple string for explicit module/class tuples to allow safe runtime inflation
     compounds = AsyncRelationshipTo(
         ('model.neo4j.compound.Compound'),
         'CONTAINS_COMPOUND',
