@@ -14,7 +14,6 @@ const menuItems = [
   { key: 'flavor-bridges', label: '9. Flavor Bridges' },
   { key: 'cross-modal', label: '10. Cross-Modal Compensation' },
   { key: 'generation', label: '11. Recipe Generation' },
-  // 👇 新增外部控制台跳轉選項
   { key: 'graphdb-console', label: '🗄️ GraphDB Console' }, 
 ]
 
@@ -28,9 +27,9 @@ const recipeSearchItems = [
 function Sidebar({ activeKey, onSelect }) {
   const handleMenuClick = (key) => {
     if (key === 'graphdb-console') {
-      // 获取当前 EC2 的公网 IP / 域名，並將連接埠動態替換為 Neo4j Web 埠 7474
+      // 自動抓取當前瀏覽器網址（如 EC2 公網 IP），並將連接埠動態導向 Neo4j Web 埠 7474
       const currentHost = window.location.hostname;
-      window.open(`http://${currentHost}:7474`, '_blank'); // _blank 會在新分頁開啟，不影響目前的 React App
+      window.open(`http://${currentHost}:7474`, '_blank'); // 在新分頁開啟
       return;
     }
     onSelect(key);
@@ -49,7 +48,7 @@ function Sidebar({ activeKey, onSelect }) {
             <button
               type="button"
               className={activeKey === item.key ? 'active' : ''}
-              onClick={() => handleMenuClick(item.key)} // 👇 修改為觸發自訂跳轉邏輯
+              onClick={() => handleMenuClick(item.key)}
             >
               {item.label}
             </button>
@@ -253,3 +252,28 @@ function RecipePage() {
     </div>
   )
 }
+
+function App() {
+  const [activeKey, setActiveKey] = useState('introduction')
+
+  return (
+    <div className="app-container" style={{ display: 'flex', minHeight: '100vh' }}>
+      <Sidebar activeKey={activeKey} onSelect={setActiveKey} />
+      <main className="main-content" style={{ flex: 1, padding: '20px', overflowY: 'auto' }}>
+        {activeKey === 'introduction' && <IntroductionPage />}
+        {activeKey === 'recipes' && <RecipePage />}
+        {/* 如果選中其他未開發完成的選單，顯示基本佔位標題 */}
+        {activeKey !== 'introduction' && activeKey !== 'recipes' && (
+          <div className="content-wrapper">
+            <h1>{menuItems.find(m => m.key === activeKey)?.label}</h1>
+            <p style={{ marginTop: '20px', opacity: 0.7 }}>
+              Component for this section is under computational development.
+            </p>
+          </div>
+        )}
+      </main>
+    </div>
+  )
+}
+
+export default App
