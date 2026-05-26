@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from tools.log import LoggingMiddleware
 from tools.settings import settings
 from router.auth_router import auth_router
+from router.graph_router import graph_router
 
 
 app = FastAPI(title="L'atelier")
@@ -18,6 +19,7 @@ app.add_middleware(
 
 
 app.include_router(auth_router, tags=["Auth"])
+app.include_router(graph_router, tags=["Graph"])
 
 
 @app.get(path="/healthCheck", tags=["Health"])
