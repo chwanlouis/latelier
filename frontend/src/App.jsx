@@ -45,7 +45,7 @@ function Sidebar({ activeKey, onSelect }) {
             <button
               type="button"
               className={activeKey === item.key ? 'active' : ''}
-              onClick={() => onSelect(item.key)}
+              onClick={() => handleMenuClick(item.key)}
             >
               {item.label}
             </button>
