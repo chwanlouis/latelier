@@ -14,6 +14,8 @@ const menuItems = [
   { key: 'flavor-bridges', label: '9. Flavor Bridges' },
   { key: 'cross-modal', label: '10. Cross-Modal Compensation' },
   { key: 'generation', label: '11. Recipe Generation' },
+  // 👇 新增外部控制台跳轉選項
+  { key: 'graphdb-console', label: '🗄️ GraphDB Console' }, 
 ]
 
 const recipeSearchItems = [
@@ -24,6 +26,16 @@ const recipeSearchItems = [
 ]
 
 function Sidebar({ activeKey, onSelect }) {
+  const handleMenuClick = (key) => {
+    if (key === 'graphdb-console') {
+      // 获取当前 EC2 的公网 IP / 域名，並將連接埠動態替換為 Neo4j Web 埠 7474
+      const currentHost = window.location.hostname;
+      window.open(`http://${currentHost}:7474`, '_blank'); // _blank 會在新分頁開啟，不影響目前的 React App
+      return;
+    }
+    onSelect(key);
+  };
+
   return (
     <nav className="sidebar">
       <div className="sidebar-header">
@@ -37,7 +49,7 @@ function Sidebar({ activeKey, onSelect }) {
             <button
               type="button"
               className={activeKey === item.key ? 'active' : ''}
-              onClick={() => onSelect(item.key)}
+              onClick={() => handleMenuClick(item.key)} // 👇 修改為觸發自訂跳轉邏輯
             >
               {item.label}
             </button>
@@ -233,163 +245,11 @@ function RecipePage() {
                 setFocusIndex(-1)
               }}
               onFocus={() => setIsOpen(Boolean(query.trim()))}
-              onBlur={() => setTimeout(() => setIsOpen(false), 100)}
               onKeyDown={onSearchKeyDown}
             />
-            {isOpen && matches.length > 0 && (
-              <ul id="autocomplete-list">
-                {matches.map((match, index) => (
-                  <li key={match}>
-                    <button
-                      type="button"
-                      className={focusIndex === index ? 'active-nav autocomplete-item' : 'autocomplete-item'}
-                      onClick={() => selectValue(match)}
-                    >
-                      {match}
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            )}
           </div>
         </div>
       </header>
-
-      <section className="meta-grid">
-        <div className="meta-card">
-          <div className="meta-label">Recipe Target</div>
-          <div className="meta-value">Ordinary Consommé</div>
-        </div>
-        <div className="meta-card">
-          <div className="meta-label">Yield Volume</div>
-          <div className="meta-value">Four Quarts (4L)</div>
-        </div>
-        <div className="meta-card">
-          <div className="meta-label">Execution Time</div>
-          <div className="meta-value">4 - 5 Hours Simmer</div>
-        </div>
-      </section>
-
-      <main className="recipe-body">
-        <section>
-          <h2>Ingredients</h2>
-          <ul className="ingredients-list">
-            <li>
-              <span>Shin of Beef</span>
-              <span className="quantity">3 lbs</span>
-            </li>
-            <li>
-              <span>Lean Beef</span>
-              <span className="quantity">3 lbs</span>
-            </li>
-            <li>
-              <span>Fowls&apos; Carcases</span>
-              <span className="quantity">1.5 lbs</span>
-            </li>
-            <li>
-              <span>Carrots</span>
-              <span className="quantity">1 lb</span>
-            </li>
-            <li>
-              <span>Turnips</span>
-              <span className="quantity">1 lb</span>
-            </li>
-            <li>
-              <span>Leeks</span>
-              <span className="quantity">0.5 lb</span>
-            </li>
-            <li>
-              <span>Celery</span>
-              <span className="quantity">1 stick</span>
-            </li>
-            <li>
-              <span>Parsnips</span>
-              <span className="quantity">0.5 lb</span>
-            </li>
-            <li>
-              <span>Medium Onion (w/ 1 Clove)</span>
-              <span className="quantity">1 unit</span>
-            </li>
-            <li>
-              <span>Grey Salt</span>
-              <span className="quantity">0.5 oz</span>
-            </li>
-            <li>
-              <span>Water</span>
-              <span className="quantity">5 Quarts</span>
-            </li>
-          </ul>
-        </section>
-
-        <section>
-          <h2>Preparation Protocol</h2>
-          <ol className="instructions-list">
-            <li>
-              String the beef together, place into a stock-pot with poultry carcases, 5 quarts of
-              water, and grey salt.
-            </li>
-            <li>
-              Heat over moderate fire, stirring occasionally. Do not let it boil too quickly to
-              ensure proper albumin coagulation.
-            </li>
-            <li>
-              Remove the scum as it forms. Add a little cold water before boiling point to force out
-              remaining scum.
-            </li>
-            <li>Add the vegetable garnishing, remove scum, and wipe the stock-pot edge clean.</li>
-            <li>Move to a corner of the fire and simmer slowly for 4 to 5 hours.</li>
-            <li>
-              Remove from heat, add half a pint of cold water, rest briefly, skim grease, and strain
-              through a fine strainer.
-            </li>
-          </ol>
-        </section>
-      </main>
     </div>
   )
 }
-
-function PlaceholderPage({ title }) {
-  return (
-    <div className="content-wrapper">
-      <h1 className="project-title">
-        {title} <span className="accent">.</span>
-      </h1>
-      <div className="card card-left">
-        <h3>Section Coming Soon</h3>
-        <p>
-          This section is part of the React port and is reserved for upcoming data visualizations and
-          domain-specific content.
-        </p>
-      </div>
-    </div>
-  )
-}
-
-function MainContent({ activeKey }) {
-  if (activeKey === 'recipes') {
-    return <RecipePage />
-  }
-
-  if (activeKey !== 'introduction') {
-    const item = menuItems.find((entry) => entry.key === activeKey)
-    return <PlaceholderPage title={item?.label ?? 'L\'atelier'} />
-  }
-
-  return <IntroductionPage />
-}
-
-function App() {
-  const [activeKey, setActiveKey] = useState('introduction')
-
-  return (
-    <div className="app-shell">
-      <Sidebar activeKey={activeKey} onSelect={setActiveKey} />
-      <main className="main-content">
-        <MainContent activeKey={activeKey} />
-      </main>
-    </div>
-  )
-}
-
-export default App
