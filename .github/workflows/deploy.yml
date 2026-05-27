@@ -25,16 +25,16 @@ jobs:
 
     - name: Add EC2 to known hosts
       run: |
-        ssh-keyscan -H 13.239.19.185 >> ~/.ssh/known_hosts
+        ssh-keyscan -H 13.236.147.145 >> ~/.ssh/known_hosts
 
     - name: Copy package to EC2
       run: |
-        scp /tmp/deploy.tar.gz ec2-user@13.239.19.185:/home/ec2-user/
+        scp /tmp/deploy.tar.gz ec2-user@13.236.147.145:/home/ec2-user/
 
     # Step 1: Ensure Core Docker Engine is Installed
     - name: Setup Docker Engine on EC2
       run: |
-        ssh ec2-user@13.239.19.185 << 'EOF'
+        ssh ec2-user@13.236.147.145 << 'EOF'
         set -e
         if ! command -v docker &> /dev/null; then
             echo "Installing Docker base engine..."
@@ -52,7 +52,7 @@ jobs:
     # Step 2: Ensure Docker Compose Plugin is Installed
     - name: Setup Docker Compose Plugin on EC2
       run: |
-          ssh ec2-user@13.239.19.185 << 'EOF'
+          ssh ec2-user@13.236.147.145 << 'EOF'
           set -e
           if ! docker compose version &> /dev/null; then
               echo "Installing Docker Compose binary plugin..."
@@ -72,7 +72,7 @@ jobs:
       # Step 3: Extract Package and Launch Application
     - name: Extract Package and Start Containers
       run: |
-        ssh ec2-user@13.239.19.185 << 'EOF'
+        ssh ec2-user@13.236.147.145 << 'EOF'
         set -e
         TARGET_DIR="/home/ec2-user/latelier"
         mkdir -p "$TARGET_DIR"

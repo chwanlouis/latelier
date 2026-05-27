@@ -19,7 +19,7 @@ services:
       postgres:
         condition: service_started
       graphdb:
-        condition: service_healthy
+        condition: service_started
 
   postgres:
     build:
@@ -47,11 +47,6 @@ services:
       - neo4j_data:/data
       - neo4j_logs:/logs
       - ./neo4j/import:/var/lib/neo4j/import
-    healthcheck:
-      test: [ "CMD-SHELL", "wget --no-verbose --tries=1 --spider localhost:7474 || exit 1" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
 
   frontend:
     build:

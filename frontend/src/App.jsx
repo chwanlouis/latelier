@@ -14,6 +14,7 @@ const menuItems = [
   { key: 'flavor-bridges', label: '9. Flavor Bridges' },
   { key: 'cross-modal', label: '10. Cross-Modal Compensation' },
   { key: 'generation', label: '11. Recipe Generation' },
+  { key: 'graphdb-console', label: '🗄️ GraphDB Console' },
 ]
 
 const recipeSearchItems = [
@@ -24,6 +25,13 @@ const recipeSearchItems = [
 ]
 
 function Sidebar({ activeKey, onSelect }) {
+  const handleMenuClick = (key) => {
+    if (key === 'graphdb-console') {
+      window.open(`http://${window.location.hostname}:7474`, '_blank');
+      return;
+    }
+    onSelect(key);
+  };
   return (
     <nav className="sidebar">
       <div className="sidebar-header">
@@ -37,7 +45,7 @@ function Sidebar({ activeKey, onSelect }) {
             <button
               type="button"
               className={activeKey === item.key ? 'active' : ''}
-              onClick={() => onSelect(item.key)}
+              onClick={() => handleMenuClick(item.key)}
             >
               {item.label}
             </button>
@@ -392,4 +400,4 @@ function App() {
   )
 }
 
-export default App
+export default App;
