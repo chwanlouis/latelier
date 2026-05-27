@@ -6,9 +6,11 @@ from neomodel import (
     AsyncRelationshipTo
 )
 from model.neo4j.relations import FoodNutrientRel, FoodCompoundRel
+from model.neo4j.enum import RelationTypeName
+from model.neo4j.base import StructuredNodeBaseClass
 
 
-class Food(AsyncStructuredNode):
+class Food(StructuredNodeBaseClass):
     food_id = StringProperty(unique_index=True, required=True)
     name = StringProperty(required=True, index=True)
     name_scientific = StringProperty(index=True)
@@ -19,15 +21,12 @@ class Food(AsyncStructuredNode):
 
     compounds = AsyncRelationshipTo(
         ('model.neo4j.compound.Compound'),
-        'CONTAINS_COMPOUND',
+        RelationTypeName.CONTAINS_COMPOUND,
         model=FoodCompoundRel
     )
 
     nutrients = AsyncRelationshipTo(
         ('model.neo4j.nutrient.Nutrient'),
-        'HAS_NUTRIENT',
+        RelationTypeName.HAS_NUTRIENT.value,
         model=FoodNutrientRel
     )
-
-    created_at = DateTimeProperty()
-    updated_at = DateTimeProperty()

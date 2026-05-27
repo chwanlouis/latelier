@@ -1,8 +1,12 @@
-from neomodel import AsyncStructuredNode, StringProperty, IntegerProperty, DateTimeProperty, AsyncRelationshipFrom
+from neomodel import (
+    AsyncStructuredNode, StringProperty, IntegerProperty, DateTimeProperty, AsyncRelationshipFrom
+)
 from model.neo4j.relations import EnzymeCompoundRel
+from model.neo4j.enum import RelationTypeName
+from model.neo4j.base import StructuredNodeBaseClass
 
 
-class Enzyme(AsyncStructuredNode):
+class Enzyme(StructuredNodeBaseClass):
     foodb_id = IntegerProperty(unique_index=True, required=True)
     enzyme_id = StringProperty(unique_index=True, required=True)
     name = StringProperty(required=True, index=True)
@@ -17,11 +21,8 @@ class Enzyme(AsyncStructuredNode):
     uniprot_name = StringProperty()
     uniprot_id = StringProperty(index=True)
 
-    created_at = DateTimeProperty()
-    updated_at = DateTimeProperty()
-
     compounds = AsyncRelationshipFrom(
         "model.neo4j.compound.Compound",
-        "INTERACTS_WITH_ENZYME",
+        RelationTypeName.INTERACTS_WITH_ENZYME.value,
         model=EnzymeCompoundRel
     )

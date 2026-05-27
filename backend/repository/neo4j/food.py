@@ -1,6 +1,7 @@
 from typing import List, Optional
 from model.neo4j.food import Food
 from repository.neo4j.base import NeoModelRepositoryBase
+from tools.log import logger
 
 
 class FoodRepository(NeoModelRepositoryBase[Food]):
@@ -29,6 +30,16 @@ class FoodRepository(NeoModelRepositoryBase[Food]):
             await food_node.save()
             return food_node
         return None
+
+    @NeoModelRepositoryBase.read_only_transactional
+    async def get_all_food_node(self) -> List[Food]:
+        try:
+            base_query = self.model_cls.nodes.order_by("name")
+            food_objects = await base_query
+            return food_objects
+        except Exception as e:
+            logger.exception(e)
+            raise e
 
 
 _GUARD_TOKEN = object()

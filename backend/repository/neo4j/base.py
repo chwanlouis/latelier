@@ -28,7 +28,21 @@ class NeoModelRepositoryBase(Generic[NodeType]):
                         f"{self.model_cls.__name__}.{func.__name__} execution: {e}"
                     )
                     raise e
+        return inner
 
+    @staticmethod
+    def read_only_transactional(func: Callable[..., Any]) -> Callable[..., Any]:
+        @wraps(func)
+        async def inner(self, *args, **kwargs):
+            async with adb.read_transaction:
+                try:
+                    return await func(self, *args, **kwargs)
+                except Exception as e:
+                    logger.error(
+                        f"read_only_transactional exception "
+                        f"[{self.model_cls.__name__}.{func.__name__}]: {e}"
+                    )
+                    raise e
         return inner
 
     @transactional

@@ -4,6 +4,7 @@ from datetime import datetime
 from tools.log import logger
 from repository.neo4j.compound_enzyme import compound_enzyme_repository
 
+
 def parse_iso_date(date_str: str) -> datetime | None:
     """Safely converts FooDB string timestamps into native Python datetime objects."""
     if not date_str:
@@ -12,6 +13,7 @@ def parse_iso_date(date_str: str) -> datetime | None:
         return datetime.fromisoformat(date_str.replace('Z', ''))
     except ValueError:
         return None
+
 
 async def ingest_compound_enzyme_relationships(file_path: str, batch_size: int = 5000):
     """
