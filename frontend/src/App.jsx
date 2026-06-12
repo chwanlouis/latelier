@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import './App.css'
+import { useAuth } from './hooks/useAuth'
 
 const menuItems = [
   { key: 'introduction', label: 'Introduction' },
@@ -24,7 +25,7 @@ const recipeSearchItems = [
   'Guide to Modern Cookery (Page 4)',
 ]
 
-function Sidebar({ activeKey, onSelect }) {
+function Sidebar({ activeKey, onSelect, user, onLogout }) {
   const handleMenuClick = (key) => {
     if (key === 'graphdb-console') {
       window.open(`http://${window.location.hostname}:7474`, '_blank');
@@ -52,8 +53,81 @@ function Sidebar({ activeKey, onSelect }) {
           </li>
         ))}
       </ul>
-      <div className="sidebar-footer">© 2026 L&apos;atelier Project</div>
+      <div className="sidebar-footer">
+        {user && (
+          <div className="sidebar-user">
+            <span className="sidebar-username">{user.username}</span>
+            <button type="button" className="logout-btn" onClick={onLogout}>
+              Sign out
+            </button>
+          </div>
+        )}
+        <div>© 2026 L&apos;atelier Project</div>
+      </div>
     </nav>
+  )
+}
+
+function LoginPage({ onLogin }) {
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
+  const [submitting, setSubmitting] = useState(false)
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setError('')
+    setSubmitting(true)
+    try {
+      await onLogin(username, password)
+    } catch (err) {
+      setError(err.message || 'Login failed')
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
+  return (
+    <div className="login-shell">
+      <div className="login-card">
+        <div className="login-header">
+          <h1 className="login-title">
+            L&apos;atelier<span className="accent">.</span>
+          </h1>
+          <p className="login-subtitle">Sign in to continue</p>
+        </div>
+        <form className="login-form" onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label htmlFor="login-username">Username</label>
+            <input
+              id="login-username"
+              type="text"
+              autoComplete="username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+              disabled={submitting}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="login-password">Password</label>
+            <input
+              id="login-password"
+              type="password"
+              autoComplete="current-password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              disabled={submitting}
+            />
+          </div>
+          {error && <div className="login-error">{error}</div>}
+          <button type="submit" className="login-btn" disabled={submitting}>
+            {submitting ? 'Signing in…' : 'Sign in'}
+          </button>
+        </form>
+      </div>
+    </div>
   )
 }
 
@@ -389,10 +463,25 @@ function MainContent({ activeKey }) {
 
 function App() {
   const [activeKey, setActiveKey] = useState('introduction')
+  const { user, loading, login, logout, isAuthenticated } = useAuth()
+
+  if (loading) {
+    return (
+      <div className="login-shell">
+        <div className="login-card">
+          <p style={{ textAlign: 'center', color: 'var(--text-muted)' }}>Loading…</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (!isAuthenticated) {
+    return <LoginPage onLogin={login} />
+  }
 
   return (
     <div className="app-shell">
-      <Sidebar activeKey={activeKey} onSelect={setActiveKey} />
+      <Sidebar activeKey={activeKey} onSelect={setActiveKey} user={user} onLogout={logout} />
       <main className="main-content">
         <MainContent activeKey={activeKey} />
       </main>
