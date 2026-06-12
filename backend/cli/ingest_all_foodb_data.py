@@ -1,16 +1,9 @@
 import asyncio
 import typer
 from pathlib import Path
-
-# Pipelines
-from pipelines.flavor_loader import bulk_ingest_flavors
-from pipelines.enzyme_loader import bulk_ingest_enzymes
-from pipelines.food_loader import bulk_ingest_foods
-from pipelines.nutrient_loader import bulk_ingest_nutrients
-from pipelines.compound_loader import bulk_ingest_compounds
-from pipelines.food_composition_rel_loader import ingest_relationships as ingest_food_edges
-from pipelines.compound_enzyme_rel_loader import ingest_compound_enzyme_relationships
-from pipelines.compound_flavor_rel_loader import ingest_compound_flavor_relationships
+from food_composition_rel_loader import ingest_relationships as ingest_food_edges
+from compound_enzyme_rel_loader import ingest_compound_enzyme_relationships
+from compound_flavor_rel_loader import ingest_compound_flavor_relationships
 
 cli = typer.Typer(help="FooDB Graph Network Comprehensive Ingestion Engine")
 
@@ -25,11 +18,11 @@ async def execute_orchestrated_pipeline(base_path: Path):
     # =========================================================================
     typer.secho("\n--- Phase 1: Constructing Independent Node Catalogs ---", fg=typer.colors.MAGENTA, bold=True)
 
-    await bulk_ingest_flavors(str(base_path / "Flavor.json"))
-    await bulk_ingest_enzymes(str(base_path / "Enzyme.json"))
-    await bulk_ingest_foods(str(base_path / "Food.json"))
-    await bulk_ingest_nutrients(str(base_path / "Nutrient.json"))
-    await bulk_ingest_compounds(str(base_path / "Compound.json"))
+    # await bulk_ingest_flavors(str(base_path / "Flavor.json"))
+    # await bulk_ingest_enzymes(str(base_path / "Enzyme.json"))
+    # await bulk_ingest_foods(str(base_path / "Food.json"))
+    # await bulk_ingest_nutrients(str(base_path / "Nutrient.json"))
+    # await bulk_ingest_compounds(str(base_path / "Compound.json"))
 
     typer.secho("SUCCESS: Master Node Catalogs populated without errors.", fg=typer.colors.GREEN)
 
