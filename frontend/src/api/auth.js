@@ -20,9 +20,9 @@ export async function logout(refreshToken) {
 }
 
 export async function getMe(accessToken) {
-  const authHeader = 'Bearer ' + accessToken
+  const scheme = 'Bearer'
   const res = await fetch(`${API_BASE}/api/v1/auth/me`, {
-    headers: { Authorization: authHeader },
+    headers: { Authorization: `${scheme} ${accessToken}` },
   })
   if (!res.ok) throw new Error('Unauthorized')
   return res.json()

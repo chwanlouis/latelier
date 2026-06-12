@@ -5,11 +5,10 @@ export function useAuth() {
   const [accessToken, setAccessToken] = useState(() => localStorage.getItem('access_token'))
   const [refreshToken, setRefreshToken] = useState(() => localStorage.getItem('refresh_token'))
   const [user, setUser] = useState(null)
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(() => !!localStorage.getItem('access_token'))
 
   useEffect(() => {
     if (!accessToken) {
-      Promise.resolve().then(() => setLoading(false))
       return
     }
     getMe(accessToken)
