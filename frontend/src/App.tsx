@@ -1,7 +1,12 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useState, type ChangeEvent, type FC, type KeyboardEvent } from 'react'
 import './App.css'
 
-const menuItems = [
+type MenuItem = {
+  key: string
+  label: string
+}
+
+const menuItems: MenuItem[] = [
   { key: 'introduction', label: 'Introduction' },
   { key: 'recipes', label: '1. Recipes' },
   { key: 'food', label: '2. Food' },
@@ -17,21 +22,28 @@ const menuItems = [
   { key: 'graphdb-console', label: '🗄️ GraphDB Console' },
 ]
 
-const recipeSearchItems = [
+const recipeSearchItems: string[] = [
   'I - Ordinary or White Consommé',
   'II - Clarified Consommé for Clear Soups',
   'Fonds de Cuisine (No. 3)',
   'Guide to Modern Cookery (Page 4)',
 ]
 
-function Sidebar({ activeKey, onSelect }) {
-  const handleMenuClick = (key) => {
+interface SidebarProps {
+  activeKey: string
+  onSelect: (key: string) => void
+}
+
+const Sidebar: FC<SidebarProps> = ({ activeKey, onSelect }) => {
+  const handleMenuClick = (key: string): void => {
     if (key === 'graphdb-console') {
-      window.open(`http://${window.location.hostname}:7474`, '_blank');
-      return;
+      window.open(`http://${window.location.hostname}:7474`, '_blank')
+      return
     }
-    onSelect(key);
-  };
+
+    onSelect(key)
+  }
+
   return (
     <nav className="sidebar">
       <div className="sidebar-header">
@@ -57,7 +69,7 @@ function Sidebar({ activeKey, onSelect }) {
   )
 }
 
-function IntroductionPage() {
+const IntroductionPage: FC = () => {
   return (
     <div className="content-wrapper">
       <h1 className="project-title">
@@ -179,7 +191,7 @@ function IntroductionPage() {
   )
 }
 
-function RecipePage() {
+const RecipePage: FC = () => {
   const [query, setQuery] = useState('')
   const [isOpen, setIsOpen] = useState(false)
   const [focusIndex, setFocusIndex] = useState(-1)
@@ -189,13 +201,13 @@ function RecipePage() {
     return recipeSearchItems.filter((item) => item.toLowerCase().includes(query.toLowerCase().trim()))
   }, [query])
 
-  const selectValue = (value) => {
+  const selectValue = (value: string): void => {
     setQuery(value)
     setIsOpen(false)
     setFocusIndex(-1)
   }
 
-  const onSearchKeyDown = (event) => {
+  const onSearchKeyDown = (event: KeyboardEvent<HTMLInputElement>): void => {
     if (!matches.length) return
 
     if (event.key === 'ArrowDown') {
@@ -217,6 +229,12 @@ function RecipePage() {
     }
   }
 
+  const onSearchChange = (event: ChangeEvent<HTMLInputElement>): void => {
+    setQuery(event.target.value)
+    setIsOpen(Boolean(event.target.value.trim()))
+    setFocusIndex(-1)
+  }
+
   return (
     <div className="recipe-container">
       <header className="recipe-header">
@@ -235,11 +253,7 @@ function RecipePage() {
               placeholder="Search Escoffier protocols..."
               autoComplete="off"
               value={query}
-              onChange={(event) => {
-                setQuery(event.target.value)
-                setIsOpen(Boolean(event.target.value.trim()))
-                setFocusIndex(-1)
-              }}
+              onChange={onSearchChange}
               onFocus={() => setIsOpen(Boolean(query.trim()))}
               onBlur={() => setTimeout(() => setIsOpen(false), 100)}
               onKeyDown={onSearchKeyDown}
@@ -357,7 +371,11 @@ function RecipePage() {
   )
 }
 
-function PlaceholderPage({ title }) {
+interface PlaceholderPageProps {
+  title: string
+}
+
+const PlaceholderPage: FC<PlaceholderPageProps> = ({ title }) => {
   return (
     <div className="content-wrapper">
       <h1 className="project-title">
@@ -374,20 +392,24 @@ function PlaceholderPage({ title }) {
   )
 }
 
-function MainContent({ activeKey }) {
+interface MainContentProps {
+  activeKey: string
+}
+
+const MainContent: FC<MainContentProps> = ({ activeKey }) => {
   if (activeKey === 'recipes') {
     return <RecipePage />
   }
 
   if (activeKey !== 'introduction') {
     const item = menuItems.find((entry) => entry.key === activeKey)
-    return <PlaceholderPage title={item?.label ?? 'L\'atelier'} />
+    return <PlaceholderPage title={item?.label ?? "L'atelier"} />
   }
 
   return <IntroductionPage />
 }
 
-function App() {
+const App: FC = () => {
   const [activeKey, setActiveKey] = useState('introduction')
 
   return (
@@ -400,4 +422,4 @@ function App() {
   )
 }
 
-export default App;
+export default App
