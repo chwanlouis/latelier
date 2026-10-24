@@ -1,0 +1,12 @@
+[
+  {
+    "id": "recipe_banana_bread",
+    "title": "Banana Bread",
+    "file": "banana-bread.json"
+  },
+  {
+    "id": "recipe_hamachi_citrus_duo",
+    "title": "Cured Hamachi Two Ways",
+    "file": "hamachi-citrus-duo.json"
+  }
+]

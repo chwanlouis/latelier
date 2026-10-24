@@ -1,0 +1,143 @@
+{
+  "id": "recipe_hamachi_citrus_duo",
+  "metadata": {
+    "title": "Cured Hamachi Two Ways with Citrus Gels & Buckwheat Crisp",
+    "description": "Seared hamachi belly tartare paired with delicate hamachi fillet sashimi, vibrant yuzu and orange fluid gels, finished with a crunchy buckwheat crisp.",
+    "cuisine": "Modern Asian / Fusion",
+    "category": "Appetizer",
+    "prep_time_minutes": 45,
+    "cook_time_minutes": 15,
+    "total_time_minutes": 60
+  },
+  "yield": {
+    "quantity": 4,
+    "unit": "servings"
+  },
+  "components": [
+    {
+      "component_id": "comp_sashimi",
+      "name": "Hamachi Fillet Sashimi",
+      "ingredients": [
+        { "ingredient_id": "ing_fillet", "name": "Sashimi-grade Hamachi fillet (loin)", "quantity": 200, "unit": "g" },
+        { "ingredient_id": "ing_sea_salt", "name": "Maldon sea salt", "quantity": 2, "unit": "g" },
+        { "ingredient_id": "ing_olive_oil", "name": "Extra virgin olive oil", "quantity": 10, "unit": "mL" }
+      ]
+    },
+    {
+      "component_id": "comp_tartare",
+      "name": "Hamachi Belly Tartare",
+      "ingredients": [
+        { "ingredient_id": "ing_belly", "name": "Hamachi belly", "quantity": 120, "unit": "g", "preparation": "finely diced" },
+        { "ingredient_id": "ing_chives", "name": "Fresh chives", "quantity": 5, "unit": "g", "preparation": "finely minced" },
+        { "ingredient_id": "ing_shallot", "name": "Eschalot / Shallot", "quantity": 8, "unit": "g", "preparation": "brunoise" },
+        { "ingredient_id": "ing_sesame_oil", "name": "Toasted sesame oil", "quantity": 3, "unit": "mL" },
+        { "ingredient_id": "ing_soy_light", "name": "Light soy sauce", "quantity": 5, "unit": "mL" }
+      ]
+    },
+    {
+      "component_id": "comp_yuzu_gel",
+      "name": "Yuzu Fluid Gel",
+      "ingredients": [
+        { "ingredient_id": "ing_yuzu_juice", "name": "100% Yuzu juice", "quantity": 100, "unit": "mL" },
+        { "ingredient_id": "ing_yuzu_water", "name": "Filtered water", "quantity": 50, "unit": "mL" },
+        { "ingredient_id": "ing_agar_yuzu", "name": "Agar-agar powder", "quantity": 1.5, "unit": "g" },
+        { "ingredient_id": "ing_sugar_yuzu", "name": "Simple syrup", "quantity": 15, "unit": "mL" }
+      ]
+    },
+    {
+      "component_id": "comp_orange_gel",
+      "name": "Blood Orange Fluid Gel",
+      "ingredients": [
+        { "ingredient_id": "ing_orange_juice", "name": "Fresh blood orange juice (strained)", "quantity": 150, "unit": "mL" },
+        { "ingredient_id": "ing_agar_orange", "name": "Agar-agar powder", "quantity": 1.5, "unit": "g" },
+        { "ingredient_id": "ing_lemon_juice", "name": "Lemon juice", "quantity": 5, "unit": "mL" }
+      ]
+    },
+    {
+      "component_id": "comp_crunch",
+      "name": "Buckwheat & Nori Coral Crisp",
+      "ingredients": [
+        { "ingredient_id": "ing_buckwheat_flour", "name": "Buckwheat flour", "quantity": 30, "unit": "g" },
+        { "ingredient_id": "ing_crisp_water", "name": "Water", "quantity": 140, "unit": "mL" },
+        { "ingredient_id": "ing_neutral_oil", "name": "Neutral vegetable oil", "quantity": 40, "unit": "mL" },
+        { "ingredient_id": "ing_nori_powder", "name": "Nori powder", "quantity": 2, "unit": "g" }
+      ]
+    }
+  ],
+  "steps": [
+    {
+      "step_number": 1,
+      "component_id": "comp_yuzu_gel",
+      "instruction": "Whisk yuzu juice, water, simple syrup, and agar-agar in a small saucepan. Bring to a boil for 1 minute to activate agar. Pour into a shallow tray and chill until completely set.",
+      "ingredients_used": ["ing_yuzu_juice", "ing_yuzu_water", "ing_agar_yuzu", "ing_sugar_yuzu"],
+      "technique": "boiling & gelling",
+      "equipment": ["saucepan", "whisk", "blender", "squeeze bottle"]
+    },
+    {
+      "step_number": 2,
+      "component_id": "comp_yuzu_gel",
+      "instruction": "Blend set yuzu gel in a high-speed blender until silky smooth. Transfer to a squeeze bottle.",
+      "technique": "blending",
+      "equipment": ["high-speed blender", "squeeze bottle"]
+    },
+    {
+      "step_number": 3,
+      "component_id": "comp_orange_gel",
+      "instruction": "Combine blood orange juice, lemon juice, and agar-agar in a saucepan. Boil for 1 minute, chill until set, then blend until glossy and smooth. Transfer to a squeeze bottle.",
+      "ingredients_used": ["ing_orange_juice", "ing_agar_orange", "ing_lemon_juice"],
+      "technique": "boiling & blending",
+      "equipment": ["saucepan", "whisk", "blender", "squeeze bottle"]
+    },
+    {
+      "step_number": 4,
+      "component_id": "comp_crunch",
+      "instruction": "Whisk buckwheat flour, water, vegetable oil, and nori powder to form a thin batter. Pour spoonfuls into a hot non-stick pan without oil; fry until water evaporates and a lacy, crunchy coral tuile forms. Drain on paper towels.",
+      "ingredients_used": ["ing_buckwheat_flour", "ing_crisp_water", "ing_neutral_oil", "ing_nori_powder"],
+      "technique": "tuile frying",
+      "equipment": ["non-stick skillet", "whisk", "paper towels"]
+    },
+    {
+      "step_number": 5,
+      "component_id": "comp_tartare",
+      "instruction": "Combine diced hamachi belly with minced chives, shallots, toasted sesame oil, and light soy sauce just before plating.",
+      "ingredients_used": ["ing_belly", "ing_chives", "ing_shallot", "ing_sesame_oil", "ing_soy_light"],
+      "technique": "chopping & seasoning",
+      "equipment": ["chef knife", "mixing bowl"]
+    },
+    {
+      "step_number": 6,
+      "component_id": "comp_sashimi",
+      "instruction": "Slice hamachi fillet into 4mm clean sashimi pieces. Brush lightly with extra virgin olive oil and sprinkle with Maldon sea salt.",
+      "ingredients_used": ["ing_fillet", "ing_sea_salt", "ing_olive_oil"],
+      "technique": "slicing & seasoning",
+      "equipment": ["yanagiba or sharp chef knife", "pastry brush"]
+    }
+  ],
+  "construction": {
+    "baking": {
+      "temperature": { "value": 0, "unit": "C" },
+      "duration_minutes": 0,
+      "container": "Chilled plating dish"
+    },
+    "assembly_steps": [
+      {
+        "order": 1,
+        "instruction": "Using a small ring mold, pack a portion of Hamachi belly tartare off-center on a chilled plate."
+      },
+      {
+        "order": 2,
+        "instruction": "Arrange 3-4 slices of Hamachi fillet sashimi overlapping adjacent to the tartare."
+      },
+      {
+        "order": 3,
+        "instruction": "Pipe dots of Yuzu fluid gel and Blood Orange fluid gel around the fish components."
+      },
+      {
+        "order": 4,
+        "instruction": "Gently rest a piece of Buckwheat & Nori coral crisp over the tartare for height and texture."
+      }
+    ],
+    "resting_time_minutes": 0,
+    "plating_notes": "Garnish with micro-coriander or edible radish flowers if available. Serve immediately while fish and gels remain chilled."
+  }
+}

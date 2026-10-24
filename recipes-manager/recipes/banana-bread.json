@@ -1,0 +1,94 @@
+{
+  "id": "recipe_banana_bread",
+  "metadata": {
+    "title": "Banana Bread",
+    "description": "Moist, rich banana bread enriched with sour cream and chopped walnuts.",
+    "cuisine": "American",
+    "category": "Baking",
+    "prep_time_minutes": 15,
+    "cook_time_minutes": 70,
+    "total_time_minutes": 85
+  },
+  "yield": {
+    "quantity": 1,
+    "unit": "loaf"
+  },
+  "components": [
+    {
+      "component_id": "comp_batter",
+      "name": "Banana Bread Batter",
+      "ingredients": [
+        { "ingredient_id": "ing_sugar", "name": "White sugar", "quantity": 200, "unit": "g" },
+        { "ingredient_id": "ing_butter", "name": "Butter", "quantity": 115, "unit": "g", "preparation": "melted" },
+        { "ingredient_id": "ing_eggs", "name": "Eggs", "quantity": 2, "unit": "pcs", "preparation": "room temperature" },
+        { "ingredient_id": "ing_vanilla", "name": "Vanilla extract", "quantity": 5, "unit": "mL" },
+        { "ingredient_id": "ing_flour", "name": "All-purpose flour", "quantity": 180, "unit": "g" },
+        { "ingredient_id": "ing_baking_soda", "name": "Baking soda", "quantity": 5, "unit": "g" },
+        { "ingredient_id": "ing_salt", "name": "Salt", "quantity": 1.5, "unit": "g" },
+        {
+          "ingredient_id": "ing_sour_cream",
+          "name": "Sour cream",
+          "quantity": 120,
+          "unit": "g"
+        },
+        { "ingredient_id": "ing_walnuts", "name": "Walnuts", "quantity": 60, "unit": "g", "preparation": "chopped" },
+        { "ingredient_id": "ing_bananas", "name": "Medium ripe bananas", "quantity": 2, "unit": "pcs", "preparation": "mashed" }
+      ]
+    }
+  ],
+  "steps": [
+    {
+      "step_number": 1,
+      "component_id": "comp_batter",
+      "instruction": "Cream together melted butter and white sugar in a bowl until smooth and fully blended.",
+      "ingredients_used": ["ing_sugar", "ing_butter"],
+      "technique": "whisking",
+      "equipment": ["mixing bowl", "whisk"]
+    },
+    {
+      "step_number": 2,
+      "component_id": "comp_batter",
+      "instruction": "Beat in room-temperature eggs, vanilla extract, and mashed ripe bananas until thoroughly emulsified.",
+      "ingredients_used": ["ing_eggs", "ing_vanilla", "ing_bananas"],
+      "technique": "mixing",
+      "equipment": ["mixing bowl"]
+    },
+    {
+      "step_number": 3,
+      "component_id": "comp_batter",
+      "instruction": "Sift together flour, baking soda, and salt. Fold dry mixture and sour cream into wet ingredients.",
+      "ingredients_used": ["ing_flour", "ing_baking_soda", "ing_salt", "ing_sour_cream"],
+      "technique": "folding",
+      "equipment": ["sieve", "spatula"]
+    },
+    {
+      "step_number": 4,
+      "component_id": "comp_batter",
+      "instruction": "Gently fold in chopped walnuts without overworking batter.",
+      "ingredients_used": ["ing_walnuts"],
+      "technique": "folding",
+      "equipment": ["spatula"]
+    }
+  ],
+  "construction": {
+    "baking": {
+      "temperature": { "value": 165, "unit": "C" },
+      "duration_minutes": 70,
+      "container": "9x5 inch greased loaf pan"
+    },
+    "assembly_steps": [
+      {
+        "order": 1,
+        "instruction": "Pour batter into greased loaf pan and smooth top gently with spatula.",
+        "components_used": ["comp_batter"]
+      },
+      {
+        "order": 2,
+        "instruction": "Bake at 165°C / 325°F for 70 minutes or until toothpick inserted in center comes out clean.",
+        "components_used": ["comp_batter"]
+      }
+    ],
+    "resting_time_minutes": 10,
+    "plating_notes": "Cool in pan for 10 minutes before transferring to wire cooling rack."
+  }
+}
